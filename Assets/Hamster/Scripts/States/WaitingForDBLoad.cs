@@ -42,7 +42,6 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      Network.TestConnection(true);
       database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
       database.GetReference(path).ValueChanged += HandleResult;
 
@@ -72,14 +71,6 @@ namespace Hamster.States {
 
     // Called once per frame when the state is active.
     public override void Update() {
-      ConnectionTesterStatus connectionTestResult = Network.TestConnection();
-
-      if (connectionTestResult == ConnectionTesterStatus.Error) {
-        Debug.LogError("Network connection unavailable");
-        database.GetReference(path).ValueChanged -= HandleResult;
-        isComplete = true;
-      }
-
       if (isComplete) {
         manager.PopState();
       } else {
